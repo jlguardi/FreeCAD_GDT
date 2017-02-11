@@ -36,6 +36,20 @@ class EventMonitor:
          return True
     return False
 
+  def remap(self, oldObjName, newObjName, callerName):
+    '''
+       Stops listening event for oldObjName & callerName
+       and stats listening for  newObjName & callerName
+    '''
+    if not newObjName in self.lines:
+      self.lines[newObjName] = []
+    callbacks = self.lines.get(oldObjName)
+    for s in [x for x in callbacks if x[2] == callerName]:
+      callbacks.remove(s)
+      self.lines[newObjName].append(s)
+    if len(self.lines[oldObjName]) == 0:
+      self.pop(oldObjName)
+
   def remove(self, callerName):
     '''
        Stops listening events FOR callerName
